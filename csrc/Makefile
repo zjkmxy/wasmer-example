@@ -7,3 +7,6 @@ all: sample.wasm
 
 sample.wasm: sample.cpp
 	$(WASI_COMPILER) $(WASI_FLAG) $< -o $@
+
+sample2.wasm: sample2.wat
+	wat2wasm $< -o $@
