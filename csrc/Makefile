@@ -2,7 +2,7 @@ WASI_COMPILER=${WASISDK_DIR}/clang++
 WASM_FLAG=-Wl,--allow-undefined -Os
 WASI_FLAG=$(WASM_FLAG) -Wl,--no-entry
 
-all: sample.wasm
+all: sample.wasm sample2.wasm sample_emcc.wasm
 
 clean:
 	rm *.wasm
