@@ -1,10 +1,11 @@
-// Both wasi-sdk and emcc accept this version now. `export_name` can be used to keep functions alive.
+// If any standard library is used, one must use wasic++ to compile it.
 #include <cstdlib>
+#include <emscripten.h>
 
 // Expose malloc and free for the host to allocate memory
 // Since WASM uses linear memory, everything must be copied between Host memory and WASM.
-__attribute__((export_name("Allocate"))) void* Allocate(int size) asm("Allocate");
-__attribute__((export_name("Deallocate"))) void Deallocate(void* ptr) asm("Deallocate");
+void* EMSCRIPTEN_KEEPALIVE Allocate(int size) asm("Allocate");
+void EMSCRIPTEN_KEEPALIVE Deallocate(void* ptr) asm("Deallocate");
 
 // The following are just proposals to illustrate how to interact with the host.
 // We need to discuss what interface we want to use.
@@ -17,8 +18,7 @@ extern void AddToMeasurementInt(const char* name, int value) asm("AddToMeasureme
 extern void SetMeasurementBytes(const char* name, const void* value, int size) asm("SetMeasurementBytes");
 extern void ForwardInterest(int faceId) asm("ForwardInterest");
 
-__attribute__((export_name("AfterReceiveInterest")))
-void AfterReceiveInterest(unsigned char* name, int nameLen) asm("AfterReceiveInterest");
+void EMSCRIPTEN_KEEPALIVE AfterReceiveInterest(unsigned char* name, int nameLen) asm("AfterReceiveInterest");
 
 void* Allocate(int size) {
   return malloc(size);

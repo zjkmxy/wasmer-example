@@ -3,27 +3,32 @@ Requirements
 
 One of the following compilers is enough.
 
-Install [Wasienv](https://github.com/wasienv/wasienv)
+Install WASM-SDK and WASMER
 -------------
 
-The official install script does not work sometimes.
-If so, remove `--install-option="--install-scripts=$INSTALL_DIRECTORY/bin"` from the script and run it again.
-It will install `wasienv` Python package, print an error and stop.
-After that, use the following command to copy the compiler scripts manually:
+Wasienv seems to be abandoned. Use the following command in a setup folder to download MacOS builds.
 
 ```bash
-cp `python3 -m site --user-base`/bin/was* ~/.wasienv/bin
+export WASI_VERSION=20
+export WASI_VERSION_FULL=${WASI_VERSION}.0
+wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/wasi-sdk-${WASI_VERSION_FULL}-macos.tar.gz
+tar xvf wasi-sdk-${WASI_VERSION_FULL}-macos.tar.gz
 ```
 
-Then, run the install script one more time to make sure it installs a compiler and a runtime for you.
+Then, in `bashrc`, export `WASISDK_DIR` to be the `bin` folder.
+
+
+Install wasmer via Homebrew `brew install wabt wasmer`.
 
 To check:
 ```bash
-wasic++ --version
-# wasienv (wasienv gcc/clang-like replacement)
+${WASISDK_DIR}/clang++ -v
+# clang version 16.0.0 (https://github.com/llvm/llvm-project 08d094a0e457360ad8b94b017d2dc277e697ca76)
+# Target: wasm32-unknown-wasi
+# Thread model: posix
 
 wasmer --version
-# wasmer 1.0.0-beta1
+# wasmer 3.3.0
 ```
 
 Now we can use `wasmc++` and `wasic++` to compile C++ sources into WASM/WASI.
@@ -31,8 +36,16 @@ Now we can use `wasmc++` and `wasic++` to compile C++ sources into WASM/WASI.
 Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html)
 -------------
 
-I'm not using this one. Homebrew will work I guess.
-This toolchain is more mature than WASI.
+Install with `brew install emscripten`
+
+To check:
+```bash
+emcc --version
+# emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.39-git
+# Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
+# This is free and open source software under the MIT license.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
 
 Differences between compilers
 -----------------------------
